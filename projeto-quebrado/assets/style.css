@@ -1,0 +1,174 @@
+
+/* ===== Layout Geral ===== */
+
+.block-container {
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    max-width: 100%;
+}
+
+/* ===== Sidebar ===== */
+
+section[data-testid="stSidebar"] {
+    background: #0f172a;
+    border-right: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+section[data-testid="stSidebar"] * {
+    color: #f8fafc;
+}
+
+/* ===== Títulos ===== */
+
+h1, h2, h3 {
+    font-weight: 700 !important;
+}
+
+h1 {
+    margin-bottom: 0.2rem;
+}
+
+.small-note {
+    color: #94a3b8;
+    font-size: 0.88rem;
+}
+
+/* ===== Cards de Métricas ===== */
+
+.metric-card {
+    background: linear-gradient(
+        135deg,
+        #0f172a 0%,
+        #1e293b 100%
+    );
+
+    border: 1px solid rgba(148, 163, 184, 0.18);
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(2, 6, 23, 0.18);
+
+    transition: all 0.25s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 14px 40px rgba(2, 6, 23, 0.28);
+}
+
+/* ===== Tabs ===== */
+
+.stTabs [role="tablist"] {
+    gap: 10px;
+}
+
+.stTabs [role="tab"] {
+    border-radius: 12px;
+    padding: 10px 18px;
+    background-color: #111827;
+    transition: 0.2s ease;
+}
+
+.stTabs [role="tab"]:hover {
+    background-color: #1f2937;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #2563eb !important;
+    color: white !important;
+}
+
+/* ===== Dataframe ===== */
+
+[data-testid="stDataFrame"] {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+/* ===== Botões ===== */
+
+.stButton > button,
+.stDownloadButton > button {
+
+    border-radius: 12px;
+
+    border: none;
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color: white;
+
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.stButton > button:hover,
+.stDownloadButton > button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+/* ===== Inputs ===== */
+
+.stTextInput input,
+.stSelectbox div[data-baseweb="select"],
+.stMultiSelect div[data-baseweb="select"] {
+
+    border-radius: 10px !important;
+
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+}
+
+/* ===== Métricas ===== */
+
+[data-testid="metric-container"] {
+
+    background: linear-gradient(
+        135deg,
+        #111827,
+        #1f2937
+    );
+
+    border-radius: 16px;
+
+    padding: 12px;
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== Scrollbar ===== */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111827;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
