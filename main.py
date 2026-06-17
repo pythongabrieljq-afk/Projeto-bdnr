@@ -169,10 +169,14 @@ st.sidebar.caption("Projeto exploratório com Streamlit + MongoDB")
 nome_banco = st.sidebar.text_input("Banco", value="CD-IA")
 nome_collection = st.sidebar.text_input("Collection", value="Bdnr")
 
-with st.sidebar.expander("Sobre o dashboard", expanded=False):
+with st.sidebar.expander("Sobre esta página", expanded=False):
     st.write(
-        "Este painel explora microdados do Vigitel com filtros dinâmicos e indicadores descritivos. "
-        "As prevalências podem ser calculadas com ponderação por peso amostral."
+        "O Vigitel é uma pesquisa realizada anualmente pelo Ministério da Saúde "
+        "que coleta informações sobre hábitos de vida e condições de saúde da população adulta "
+        "das capitais brasileiras e do Distrito Federal. "
+        "Nesta página, você pode explorar esses dados utilizando filtros como sexo, "
+        "faixa etária, cidade e escolaridade. Os gráficos e indicadores são atualizados "
+        "automaticamente para facilitar a análise e a comparação entre diferentes grupos."
     )
 
 df = carregar_dados(nome_banco, nome_collection)
@@ -181,8 +185,10 @@ if df.empty:
     st.error("Nenhum dado encontrado. Verifique o nome do banco e da collection.")
     st.stop()
 
-st.title("📊 Dashboard Exploratório — Vigitel")
-st.caption("Filtros dinâmicos, indicadores descritivos e comparações por sexo, faixa etária, cidade e escolaridade.")
+st.title("📊 Explorando os Dados do Vigitel")
+st.caption(
+    "Uma forma simples e interativa de visualizar e comparar indicadores de saúde da população."
+)
 
 anos = sorted([int(x) for x in df["ano"].dropna().unique().tolist()]) if "ano" in df.columns else []
 cidades = sorted(df["cidade_nome"].dropna().astype(str).unique().tolist()) if "cidade_nome" in df.columns else []
