@@ -41,6 +41,39 @@ MAPA_CIDADES = {
     26: "Vitória", 27: "Distrito Federal"
 }
 
+COORDS_VIGITEL = {
+
+    "Aracaju": (-10.9472,-37.0731),
+    "Belém": (-1.4558,-48.4902),
+    "Belo Horizonte": (-19.9167,-43.9345),
+    "Boa Vista": (2.8235,-60.6758),
+    "Campo Grande": (-20.4697,-54.6201),
+    "Cuiabá": (-15.6014,-56.0979),
+    "Curitiba": (-25.4284,-49.2733),
+    "Florianópolis": (-27.5949,-48.5482),
+    "Fortaleza": (-3.7319,-38.5267),
+    "Goiânia": (-16.6869,-49.2648),
+    "João Pessoa": (-7.1195,-34.8450),
+    "Macapá": (0.0349,-51.0694),
+    "Maceió": (-9.6498,-35.7089),
+    "Manaus": (-3.1190,-60.0217),
+    "Natal": (-5.7945,-35.2110),
+    "Palmas": (-10.1840,-48.3336),
+    "Porto Alegre": (-30.0346,-51.2177),
+    "Porto Velho": (-8.7608,-63.8999),
+    "Recife": (-8.0476,-34.8770),
+    "Rio Branco": (-9.9747,-67.8243),
+    "Rio de Janeiro": (-22.9068,-43.1729),
+    "Salvador": (-12.9714,-38.5014),
+    "São Luís": (-2.5387,-44.2825),
+    "São Paulo": (-23.5505,-46.6333),
+    "Teresina": (-5.0892,-42.8019),
+    "Vitória": (-20.3155,-40.3128),
+
+    "Distrito Federal": (-15.7939,-47.8828)
+
+}
+
 ORDENS_FAIXA = ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"]
 ORDENS_ESC = ["0-8 anos", "9-11 anos", "12+ anos"]
 
@@ -203,8 +236,15 @@ c3.metric("Sobrepeso", resumo_texto(prev_sobrepeso, "pct"))
 c4.metric("Obesidade", resumo_texto(prev_obesidade, "pct"))
 c5.metric("Peso médio", resumo_texto(peso_medio, "kg"))
 
-aba1, aba2, aba3, aba4, aba5 = st.tabs([
-    "Visão geral", "Sexo", "Faixa etária", "Escolaridade", "Microdados"
+aba1, aba2, aba3, aba4, aba5, aba6 = st.tabs([
+
+    "Visão geral",
+    "Sexo",
+    "Faixa etária",
+    "Escolaridade",
+    "Microdados",
+    "Rede Vigitel"
+
 ])
 
 with aba1:
@@ -316,4 +356,138 @@ with aba5:
         data=csv_bytes,
         file_name="vigitel_filtrado.csv",
         mime="text/csv",
+    )
+with aba6:
+
+    st.subheader("🌐 Rede Nacional do Vigitel")
+
+    df_mapa = pd.DataFrame([
+        {
+            "cidade": cidade,
+            "lat": coord[0],
+            "lon": coord[1]
+        }
+
+        for cidade, coord in COORDS_VIGITEL.items()
+    ])
+
+    fig = go.Figure()
+
+    # Brasília
+
+    lat_df = COORDS_VIGITEL["Distrito Federal"][0]
+    lon_df = COORDS_VIGITEL["Distrito Federal"][1]
+
+
+    # ARESTAS
+
+    for cidade, (lat, lon) in COORDS_VIGITEL.items():
+
+        if cidade == "Distrito Federal":
+            continue
+
+        fig.add_trace(
+
+            go.Scattermap(
+
+                mode="lines",
+
+                lat=[lat_df, lat],
+
+                lon=[lon_df, lon],
+
+                line=dict(
+                    width=1,
+                    color="rgba(0,212,255,0.5)"
+                ),
+
+                hoverinfo='skip',
+
+                showlegend=False
+
+            )
+
+        )
+
+
+    # NÓS
+
+    fig.add_trace(
+
+        go.Scattermap(
+
+            mode="markers+text",
+
+            lat=df_mapa["lat"],
+
+            lon=df_mapa["lon"],
+
+            text=df_mapa["cidade"],
+
+            textposition="top center",
+
+            hovertext=df_mapa["cidade"],
+
+            hoverinfo="text",
+
+            marker=dict(
+
+                size=[
+                    18 if x=="Distrito Federal" else 10
+                    for x in df_mapa["cidade"]
+                ],
+
+                color=[
+
+                    "#FF4B4B"
+                    if x=="Distrito Federal"
+
+                    else "#00D4FF"
+
+                    for x in df_mapa["cidade"]
+                ]
+
+            ),
+
+            showlegend=False
+
+        )
+
+    )
+
+
+    fig.update_layout(
+
+        map_style="carto-darkmatter",
+
+        margin={"l":0,"r":0,"t":0,"b":0},
+
+        height=700,
+
+        title="Cobertura Nacional do Vigitel"
+
+    )
+
+
+    fig.update_layout(
+
+        map=dict(
+
+            center=dict(
+
+                lat=-14,
+
+                lon=-54
+
+            ),
+
+            zoom=3.2
+
+        )
+
+    )
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
     )
