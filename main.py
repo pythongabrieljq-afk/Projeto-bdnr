@@ -313,38 +313,64 @@ with aba2:
 
 with aba3:
     if all(col in filtrado.columns for col in ["faixa_idade", "sobrepeso"]):
-        faixa_prev = agregar_ponderado(filtrado, ["faixa_idade"], "sobrepeso") if ponderado else filtrado.groupby("faixa_idade", as_index=False, observed=False)["sobrepeso"].mean().rename(columns={"sobrepeso": "valor"})
+        faixa_prev = (
+            agregar_ponderado(filtrado, ["faixa_idade"], "sobrepeso")
+            if ponderado
+            else filtrado.groupby("faixa_idade", as_index=False, observed=False)["sobrepeso"]
+                .mean()
+                .rename(columns={"sobrepeso": "valor"})
+        )
         if not faixa_prev.empty:
             if "valor_pct" not in faixa_prev.columns:
                 faixa_prev["valor_pct"] = faixa_prev["valor"] * 100
-            fig = px.bar(
-                faixa_prev,
+
+            fig = px.area(
+                faixa_prev.sort_values("faixa_idade"),
                 x="faixa_idade",
                 y="valor_pct",
-                color="valor_pct",
-                color_continuous_scale="Blues",
                 title="Sobrepeso por faixa etária",
                 labels={"valor_pct": "%", "faixa_idade": "Faixa etária"},
                 template="plotly_dark",
             )
-            fig.update_layout(coloraxis_showscale=False)
+
+            fig.update_traces(line=dict(width=2), fillcolor="rgba(0,123,255,0.4)")
+            fig.update_layout(yaxis_title="%", xaxis_title="Faixa etária")
+
             st.plotly_chart(fig, use_container_width=True)
 
 with aba4:
     if all(col in filtrado.columns for col in ["esc_grupo", "obeso"]):
-        esc_prev = agregar_ponderado(filtrado, ["esc_grupo"], "obeso") if ponderado else filtrado.groupby("esc_grupo", as_index=False, observed=False)["obeso"].mean().rename(columns={"obeso": "valor"})
+        esc_prev = (
+            agregar_ponderado(filtrado, ["esc_grupo"], "obeso")
+            if ponderado
+            else filtrado.groupby("esc_grupo", as_index=False, observed=False)["obeso"]
+                .mean()
+                .rename(columns={"obeso": "valor"})
+        )
         if not esc_prev.empty:
             if "valor_pct" not in esc_prev.columns:
                 esc_prev["valor_pct"] = esc_prev["valor"] * 100
-            fig = px.bar(
+
+            fig = px.line_polar(
                 esc_prev,
-                x="esc_grupo",
-                y="valor_pct",
-                color="esc_grupo",
+                r="valor_pct",
+                theta="esc_grupo",
+                line_close=True,
                 title="Obesidade por escolaridade",
-                labels={"valor_pct": "%", "esc_grupo": "Escolaridade"},
                 template="plotly_dark",
             )
+
+            fig.update_traces(fill="toself", line=dict(width=2))
+            fig.update_layout(
+                polar=dict(
+                    radialaxis=dict(
+                        visible=True,
+                        range=[0, 100]
+                    )
+                ),
+                yaxis_title="%",
+            )
+
             st.plotly_chart(fig, use_container_width=True)
 
 with aba5:
